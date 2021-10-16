@@ -30,7 +30,7 @@ func LoadServer(file *ini.File) {
 }
 func LoadDB(file *ini.File) {
 	Db = file.Section("database").Key("Db").String()
-	DbHost = file.Section("database").Key("Db").String()
+	DbHost = file.Section("database").Key("DbHost").String()
 	DbPort = file.Section("database").Key("DbPort").String()
 	DbUser = file.Section("database").Key("DbUser").String()
 	DbPassword = file.Section("database").Key("DbPassword").String()
