@@ -12,7 +12,7 @@ func AddUser(c *gin.Context){
 	var data model.User
 	_ = c.ShouldBindJSON(&data)
 	var code int
-	code=model.CheckUser(data.Username)
+	code=model.CheckUserNotExist(data.Username)
 	if code==errmsg.SUCCESS{
 		model.CreateUser(&data)
 	}
@@ -36,6 +36,17 @@ func GetUsers(c *gin.Context){
 	c.JSON(http.StatusOK,gin.H{
 		"code":code,
 		"data":data,
+		"msg":errmsg.GetErrMsg(code),
+	})
+}
+// 检查用户输入的密码是否正确
+func CheckUser(c *gin.Context){
+	var user model.User
+	_=c.ShouldBindJSON(&user)
+	var code int
+	code=model.CheckPassword(&user)
+	c.JSON(http.StatusOK,gin.H{
+		"code":code,
 		"msg":errmsg.GetErrMsg(code),
 	})
 }

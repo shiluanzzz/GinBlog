@@ -15,7 +15,7 @@ const (
 
 var errMsg = map[int]string{
 	SUCCESS: "成功",
-	ERROR:   "错误",
+	ERROR:   "系统错误,请联系管理员",
 	// user
 	ERROR_USERNAME_USED:  "用户名已经使用",
 	ERROR_PASSWORD_WORON: "密码错误",

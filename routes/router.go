@@ -13,6 +13,7 @@ func InitRouter() {
 	{
 		router.POST("user/add",v1.AddUser)
 		router.GET("user/list",v1.GetUsers)
+		router.POST("user/check",v1.CheckUser)
 		router.GET("user/get/:id",v1.GetUser)
 		router.POST("user/delete",v1.DeleteUser)
 		router.POST("user/update",v1.UpdateUser)

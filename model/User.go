@@ -2,7 +2,9 @@ package model
 
 import (
 	"GinBlog/utils/errmsg"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+	"log"
 )
 
 type User struct {
@@ -12,7 +14,7 @@ type User struct {
 	Role     int    `gorm:"type:int;DEFAULT:2" json:"role" validate:"required,gte=0" label:"角色码"`
 }
 
-func CheckUser(name string)int{
+func CheckUserNotExist(name string)int{
 	var data User
 	db.Select("id").Where("username=?",name).First(&data)
 	if data.ID>0{
@@ -21,7 +23,7 @@ func CheckUser(name string)int{
 	return errmsg.SUCCESS
 }
 func CreateUser(user *User)int{
-
+	user.Password=GeneratePasswordHash(user.Password)
 	err:=db.Create(&user).Error
 	if err!=nil{
 		return errmsg.ERROR
@@ -35,4 +37,29 @@ func GetUsers(pageSize,pageNum int)[]User{
 		return nil
 	}
 	return data
+}
+func CheckPassword(user *User)int{
+	//if CheckUserNotExist(user.Username)!=errmsg.SUCCESS{
+	//	return errmsg.ERROR_USER_NOT_EXIST
+	//}
+	var selectUser User
+	err:=db.Where("username=?",user.Username).First(&selectUser).Error
+	if err!=nil{
+		log.Println("从数据库中查询密码出错",err,user)
+		log.Println(selectUser)
+		return errmsg.ERROR
+	}
+	err=bcrypt.CompareHashAndPassword([]byte(selectUser.Password),[]byte(user.Password))
+	if err!=nil{
+		return errmsg.ERROR_PASSWORD_WORON
+	}
+	return errmsg.SUCCESS
+}
+func GeneratePasswordHash(passwd string)string{
+	hashPwd,err:=bcrypt.GenerateFromPassword([]byte(passwd),10)
+	if err!=nil{
+		log.Println("ERROR,generate password hash error"+passwd)
+		return passwd
+	}
+	return string(hashPwd)
 }
