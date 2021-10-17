@@ -11,6 +11,8 @@ const (
 	ERROR_PASSWORD_WORON = 1002
 	ERROR_USER_NOT_EXIST = 1003
 	ERROR_TOKEN_RUNTIME  = 1004
+
+	ERROR_CATENAME_USED = 2001
 )
 
 var errMsg = map[int]string{
@@ -21,16 +23,14 @@ var errMsg = map[int]string{
 	ERROR_PASSWORD_WORON: "密码错误",
 	ERROR_USER_NOT_EXIST: "用户不存在",
 	ERROR_TOKEN_RUNTIME:  "token超时",
-	1005:                 "",
 	// article
-	2001: "",
-	2002: "",
+	ERROR_CATENAME_USED: "分类名称已经使用",
 }
 
 func GetErrMsg(code int) string {
-	if msg,ok:=errMsg[code];ok{
+	if msg, ok := errMsg[code]; ok {
 		return msg
-	}else{
-		return fmt.Sprintf("状态码%v未定义",code)
+	} else {
+		return fmt.Sprintf("状态码%v未定义", code)
 	}
 }

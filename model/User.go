@@ -14,52 +14,72 @@ type User struct {
 	Role     int    `gorm:"type:int;DEFAULT:2" json:"role" validate:"required,gte=0" label:"角色码"`
 }
 
-func CheckUserNotExist(name string)int{
+func CheckUserNotExist(name string) int {
 	var data User
-	db.Select("id").Where("username=?",name).First(&data)
-	if data.ID>0{
+	db.Select("id").Where("username=?", name).First(&data)
+	if data.ID > 0 {
 		return errmsg.ERROR_USERNAME_USED
 	}
 	return errmsg.SUCCESS
 }
-func CreateUser(user *User)int{
-	user.Password=GeneratePasswordHash(user.Password)
-	err:=db.Create(&user).Error
-	if err!=nil{
+func CreateUser(user *User) int {
+	user.Password = GeneratePasswordHash(user.Password)
+	err := db.Create(&user).Error
+	if err != nil {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS
 }
-func GetUsers(pageSize,pageNum int)[]User{
+func GetUsers(pageSize, pageNum int) []User {
 	var data []User
-	err:=db.Limit(pageSize).Offset((pageNum-1)*pageSize).Find(&data).Error
-	if err!=nil && err!=gorm.ErrRecordNotFound{
+	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&data).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil
 	}
 	return data
 }
-func CheckPassword(user *User)int{
+func CheckPassword(user *User) int {
 	//if CheckUserNotExist(user.Username)!=errmsg.SUCCESS{
 	//	return errmsg.ERROR_USER_NOT_EXIST
 	//}
 	var selectUser User
-	err:=db.Where("username=?",user.Username).First(&selectUser).Error
-	if err!=nil{
-		log.Println("从数据库中查询密码出错",err,user)
+	err := db.Where("username=?", user.Username).First(&selectUser).Error
+	if err != nil {
+		log.Println("从数据库中查询密码出错", err, user)
 		log.Println(selectUser)
 		return errmsg.ERROR
 	}
-	err=bcrypt.CompareHashAndPassword([]byte(selectUser.Password),[]byte(user.Password))
-	if err!=nil{
+	err = bcrypt.CompareHashAndPassword([]byte(selectUser.Password), []byte(user.Password))
+	if err != nil {
 		return errmsg.ERROR_PASSWORD_WORON
 	}
 	return errmsg.SUCCESS
 }
-func GeneratePasswordHash(passwd string)string{
-	hashPwd,err:=bcrypt.GenerateFromPassword([]byte(passwd),10)
-	if err!=nil{
-		log.Println("ERROR,generate password hash error"+passwd)
+func GeneratePasswordHash(passwd string) string {
+	hashPwd, err := bcrypt.GenerateFromPassword([]byte(passwd), 10)
+	if err != nil {
+		log.Println("ERROR,generate password hash error" + passwd)
 		return passwd
 	}
 	return string(hashPwd)
+}
+
+func EditUser(id int, user *User) int {
+	data := map[string]interface{}{}
+	data["username"] = user.Username
+	data["role"] = user.Role
+	err := db.Model(&User{}).Where("id = ?", id).Updates(&data).Error
+	if err != nil {
+		log.Println("更新用户信息出错,", err)
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCESS
+}
+func DeleteUser(id int) int {
+	err := db.Model(&User{}).Where("id=?", id).Delete(&User{}).Error
+	if err != nil {
+		log.Println("删除用户错误", err)
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCESS
 }

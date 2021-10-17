@@ -8,13 +8,13 @@ import (
 	"strconv"
 )
 
-func AddUser(c *gin.Context) {
-	var data model.User
+func AddCate(c *gin.Context) {
+	var data model.Category
 	_ = c.ShouldBindJSON(&data)
 	var code int
-	code = model.CheckUserNotExist(data.Username)
+	code = model.CheckCateNotExist(data.Name)
 	if code == errmsg.SUCCESS {
-		model.CreateUser(&data)
+		model.CreateCate(&data)
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
@@ -22,7 +22,7 @@ func AddUser(c *gin.Context) {
 		"data": data,
 	})
 }
-func GetUsers(c *gin.Context) {
+func GetCates(c *gin.Context) {
 	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
 	if pageSize == 0 {
@@ -31,7 +31,7 @@ func GetUsers(c *gin.Context) {
 	if pageNum == 0 {
 		pageNum = -1
 	}
-	data := model.GetUsers(pageSize, pageNum)
+	data := model.GetCates(pageSize, pageNum)
 	code := errmsg.SUCCESS
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
@@ -39,13 +39,13 @@ func GetUsers(c *gin.Context) {
 		"msg":  errmsg.GetErrMsg(code),
 	})
 }
-func UpdateUser(c *gin.Context) {
-	var data model.User
+func UpdateCate(c *gin.Context) {
+	var data model.Category
 	_ = c.ShouldBindJSON(&data)
 	id, _ := strconv.Atoi(c.Param("id"))
-	code := model.CheckUserNotExist(data.Username)
+	code := model.CheckCateNotExist(data.Name)
 	if code == errmsg.SUCCESS {
-		model.EditUser(id, &data)
+		model.EditCate(id, &data)
 	}
 	if code == errmsg.ERROR_USERNAME_USED {
 		c.Abort()
@@ -55,26 +55,11 @@ func UpdateUser(c *gin.Context) {
 		"msg":  errmsg.GetErrMsg(code),
 	})
 }
-func DeleteUser(c *gin.Context) {
+func DeleteCate(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	code := model.DeleteUser(id)
+	code := model.DeleteCate(id)
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"msg":  errmsg.GetErrMsg(code),
 	})
-}
-
-// CheckUser 检查用户输入的密码是否正确
-func CheckUser(c *gin.Context) {
-	var user model.User
-	_ = c.ShouldBindJSON(&user)
-	var code int
-	code = model.CheckPassword(&user)
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  errmsg.GetErrMsg(code),
-	})
-}
-func GetUser(c *gin.Context) {
-	//todo
 }

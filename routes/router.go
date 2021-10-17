@@ -8,15 +8,23 @@ import "GinBlog/utils"
 
 func InitRouter() {
 	gin.SetMode(utils.AppMode)
-	r:=gin.Default()
-	router:=r.Group("api/v1")
+	r := gin.Default()
+	routerUser := r.Group("api/v1/user")
 	{
-		router.POST("user/add",v1.AddUser)
-		router.GET("user/list",v1.GetUsers)
-		router.POST("user/check",v1.CheckUser)
-		router.GET("user/get/:id",v1.GetUser)
-		router.POST("user/delete",v1.DeleteUser)
-		router.POST("user/update",v1.UpdateUser)
+		routerUser.POST("/add", v1.AddUser)
+		routerUser.GET("/list", v1.GetUsers)
+		routerUser.DELETE("/delete/:id", v1.DeleteUser)
+		routerUser.PUT("/update/:id", v1.UpdateUser)
+		routerUser.POST("/check", v1.CheckUser)
+		routerUser.GET("/get/:id", v1.GetUser)
 	}
+	routerCate := r.Group("api/v1/cate")
+	{
+		routerCate.POST("/add", v1.AddCate)
+		routerCate.GET("/list", v1.GetCates)
+		routerCate.DELETE("/delete/:id", v1.DeleteCate)
+		routerCate.PUT("/update/:id", v1.UpdateCate)
+	}
+
 	r.Run(utils.HttpPort)
 }
