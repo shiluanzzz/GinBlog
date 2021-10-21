@@ -12,7 +12,10 @@ const (
 	ERROR_USER_NOT_EXIST = 1003
 	ERROR_TOKEN_RUNTIME  = 1004
 
-	ERROR_CATENAME_USED = 2001
+	ERROR_CATENAME_USED      = 2001
+	ERROR_CATENAME_NOT_EXIST = 2002
+
+	ERROR_ARTICLE_NOT_EXIST = 3001
 )
 
 var errMsg = map[int]string{
@@ -23,8 +26,12 @@ var errMsg = map[int]string{
 	ERROR_PASSWORD_WORON: "密码错误",
 	ERROR_USER_NOT_EXIST: "用户不存在",
 	ERROR_TOKEN_RUNTIME:  "token超时",
-	// article
-	ERROR_CATENAME_USED: "分类名称已经使用",
+	// 分类错误信息
+	ERROR_CATENAME_USED:      "分类名称已经使用",
+	ERROR_CATENAME_NOT_EXIST: "分类不存在",
+	// 文章错误信息
+
+	ERROR_ARTICLE_NOT_EXIST: "文章不存在",
 }
 
 func GetErrMsg(code int) string {

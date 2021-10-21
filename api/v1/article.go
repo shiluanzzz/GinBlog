@@ -28,8 +28,7 @@ func GetArts(c *gin.Context) {
 	if pageNum == 0 {
 		pageNum = -1
 	}
-	data := model.GetArticles(pageSize, pageNum)
-	code := errmsg.SUCCESS
+	data, code := model.GetArticles(pageSize, pageNum)
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"data": data,
@@ -53,6 +52,34 @@ func DeleteArt(c *gin.Context) {
 	code := model.DeleteArticle(id)
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
+		"msg":  errmsg.GetErrMsg(code),
+	})
+}
+
+func GetAriById(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Query("id"))
+	data, code := model.GetArticleById(id)
+	c.JSON(http.StatusOK, gin.H{
+		"code": code,
+		"msg":  errmsg.GetErrMsg(code),
+		"data": data,
+	})
+}
+
+func GetALLArtByCate(c *gin.Context) {
+	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
+	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
+	cateId, _ := strconv.Atoi(c.Query("id"))
+	if pageSize == 0 {
+		pageSize = -1
+	}
+	if pageNum == 0 {
+		pageNum = -1
+	}
+	data, code := model.GetArticleByCate(cateId, pageSize, pageNum)
+	c.JSON(http.StatusOK, gin.H{
+		"code": code,
+		"data": data,
 		"msg":  errmsg.GetErrMsg(code),
 	})
 }

@@ -32,6 +32,8 @@ func InitRouter() {
 		routerArt.GET("/list", v1.GetArts)
 		routerArt.DELETE("/delete/:id", v1.DeleteArt)
 		routerArt.PUT("/update/:id", v1.UpdateArt)
+		routerArt.POST("/cate", v1.GetALLArtByCate)
+		routerArt.POST("/id", v1.GetAriById)
 	}
 
 	err := r.Run(utils.HttpPort)

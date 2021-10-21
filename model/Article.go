@@ -7,6 +7,7 @@ import (
 )
 
 type Article struct {
+	// category 是文章的子类 方便连接查询
 	Category Category `gorm:"foreignkey:Cid"`
 	gorm.Model
 	Title        string `gorm:"type:varchar(100);not null" json:"title"`
@@ -18,6 +19,9 @@ type Article struct {
 	ReadCount    int    `gorm:"type:int;not null;default:0" json:"read_count"`
 }
 
+// CreateArticle
+//  @Description: 新增文章
+//
 func CreateArticle(cate *Article) int {
 	err := db.Create(&cate).Error
 	if err != nil {
@@ -26,14 +30,42 @@ func CreateArticle(cate *Article) int {
 	return errmsg.SUCCESS
 }
 
-// GetArticles TODO 查询文章
-func GetArticles(pageSize, pageNum int) []Article {
+// GetArticleByCate
+//  @Description: 通过分类id查询文章
+//  @param cate 分类id
+//  @param pageSize 页面数据量
+//  @param pageNum 页码
+//  @return []Article
+//  @return int
+//
+func GetArticleByCate(cate int, pageSize, pageNum int) ([]Article, int) {
 	var data []Article
-	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&data).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil
+	err := db.Preload("Category").Limit(pageSize).Offset((pageNum-1)*pageSize).Where("cid=?", cate).Find(&data).Error
+	if err != nil {
+		return data, errmsg.ERROR_CATENAME_NOT_EXIST
 	}
-	return data
+	return data, errmsg.SUCCESS
+}
+
+// GetArticleById 查询单个文章信息
+func GetArticleById(id int) (Article, int) {
+	var data Article
+	err := db.Preload("Category").Where("id = ?", id).First(&data).Error
+	if err != nil {
+		return Article{}, errmsg.ERROR_ARTICLE_NOT_EXIST
+	}
+	return data, errmsg.SUCCESS
+
+}
+
+// GetArticles  查询文章列表，带有分类标签
+func GetArticles(pageSize, pageNum int) ([]Article, int) {
+	var data []Article
+	err := db.Preload("Category").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&data).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, errmsg.ERROR
+	}
+	return data, errmsg.SUCCESS
 }
 
 func EditArticle(id int, article *Article) int {
