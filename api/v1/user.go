@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"GinBlog/middleware"
 	"GinBlog/model"
 	"GinBlog/utils/errmsg"
 	"github.com/gin-gonic/gin"
@@ -14,6 +15,8 @@ func AddUser(c *gin.Context) {
 	var code int
 	code = model.CheckUserNotExist(data.Username)
 	if code == errmsg.SUCCESS {
+		// 默认为普通用户 权限为2
+		data.Role = 2
 		model.CreateUser(&data)
 	}
 	c.JSON(http.StatusOK, gin.H{
@@ -64,17 +67,25 @@ func DeleteUser(c *gin.Context) {
 	})
 }
 
-// CheckUser 检查用户输入的密码是否正确
-func CheckUser(c *gin.Context) {
+// Login 检查用户输入的密码是否正确
+func Login(c *gin.Context) {
 	var user model.User
 	_ = c.ShouldBindJSON(&user)
+	var token string
 	var code int
-	code = model.CheckPassword(&user)
+	var roleCode int
+	roleCode, code = model.CheckPassword(&user)
+	// 判断密码是否正确和是不是管理员
+	if code == errmsg.SUCCESS {
+		if roleCode == 0 {
+			token, code = middleware.NewToken(user.Username)
+		} else {
+			code = errmsg.ERROR_USER_ROOT_NOT
+		}
+	}
 	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  errmsg.GetErrMsg(code),
+		"code":  code,
+		"msg":   errmsg.GetErrMsg(code),
+		"token": token,
 	})
-}
-func GetUser(c *gin.Context) {
-	//todo
 }

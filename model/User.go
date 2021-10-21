@@ -38,7 +38,7 @@ func GetUsers(pageSize, pageNum int) []User {
 	}
 	return data
 }
-func CheckPassword(user *User) int {
+func CheckPassword(user *User) (RoleCode, errCode int) {
 	//if CheckUserNotExist(user.Username)!=errmsg.SUCCESS{
 	//	return errmsg.ERROR_USER_NOT_EXIST
 	//}
@@ -47,13 +47,13 @@ func CheckPassword(user *User) int {
 	if err != nil {
 		log.Println("从数据库中查询密码出错", err, user)
 		log.Println(selectUser)
-		return errmsg.ERROR
+		return 2, errmsg.ERROR
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(selectUser.Password), []byte(user.Password))
 	if err != nil {
-		return errmsg.ERROR_PASSWORD_WORON
+		return 2, errmsg.ERROR_PASSWORD_WORON
 	}
-	return errmsg.SUCCESS
+	return selectUser.Role, errmsg.SUCCESS
 }
 func GeneratePasswordHash(passwd string) string {
 	hashPwd, err := bcrypt.GenerateFromPassword([]byte(passwd), 10)
