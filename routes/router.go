@@ -25,6 +25,13 @@ func InitRouter() {
 		routerCate.DELETE("/delete/:id", v1.DeleteCate)
 		routerCate.PUT("/update/:id", v1.UpdateCate)
 	}
+	routerArt := r.Group("api/v1/article")
+	{
+		routerArt.POST("/add", v1.AddArt)
+		routerArt.GET("/list", v1.GetArts)
+		routerArt.DELETE("/delete/:id", v1.DeleteArt)
+		routerArt.PUT("/update/:id", v1.UpdateArt)
+	}
 
 	r.Run(utils.HttpPort)
 }
