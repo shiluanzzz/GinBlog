@@ -3,6 +3,7 @@ package routes
 import (
 	v1 "GinBlog/api/v1"
 	"github.com/gin-gonic/gin"
+	"log"
 )
 import "GinBlog/utils"
 
@@ -33,5 +34,8 @@ func InitRouter() {
 		routerArt.PUT("/update/:id", v1.UpdateArt)
 	}
 
-	r.Run(utils.HttpPort)
+	err := r.Run(utils.HttpPort)
+	if err != nil {
+		log.Fatalln("gin框架启动失败,", err)
+	}
 }
