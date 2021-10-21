@@ -16,6 +16,12 @@ const (
 	ERROR_CATENAME_NOT_EXIST = 2002
 
 	ERROR_ARTICLE_NOT_EXIST = 3001
+
+	// token related
+	ERROR_TOKEN_NOT_EXIST   = 4001
+	ERROR_TOKEN_TIME_OUT    = 4002
+	ERROR_TOKEN_WOKEN_WRONG = 4003
+	ERROR_TOKEN_TYPE_WRONG  = 4004
 )
 
 var errMsg = map[int]string{
@@ -28,10 +34,15 @@ var errMsg = map[int]string{
 	ERROR_TOKEN_RUNTIME:  "token超时",
 	// 分类错误信息
 	ERROR_CATENAME_USED:      "分类名称已经使用",
-	ERROR_CATENAME_NOT_EXIST: "分类不存在",
+	ERROR_CATENAME_NOT_EXIST: "不存在",
 	// 文章错误信息
-
 	ERROR_ARTICLE_NOT_EXIST: "文章不存在",
+
+	//token
+	ERROR_TOKEN_NOT_EXIST:   "TOKEN not exist",
+	ERROR_TOKEN_TIME_OUT:    "token超时",
+	ERROR_TOKEN_WOKEN_WRONG: "token 错误",
+	ERROR_TOKEN_TYPE_WRONG:  "token格式错误",
 }
 
 func GetErrMsg(code int) string {
