@@ -28,11 +28,12 @@ func GetArts(c *gin.Context) {
 	if pageNum == 0 {
 		pageNum = -1
 	}
-	data, code := model.GetArticles(pageSize, pageNum)
+	data, code, totalPage := model.GetArticles(pageSize, pageNum)
 	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"data": data,
-		"msg":  errmsg.GetErrMsg(code),
+		"code":  code,
+		"data":  data,
+		"total": totalPage,
+		"msg":   errmsg.GetErrMsg(code),
 	})
 }
 func UpdateArt(c *gin.Context) {

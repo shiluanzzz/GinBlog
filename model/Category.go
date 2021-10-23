@@ -26,13 +26,14 @@ func CreateCate(cate *Category) int {
 	}
 	return errmsg.SUCCESS
 }
-func GetCates(pageSize, pageNum int) []Category {
+func GetCates(pageSize, pageNum int) ([]Category, int64) {
 	var data []Category
-	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&data).Error
+	var count int64
+	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&data).Count(&count).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil
+		return nil, 0
 	}
-	return data
+	return data, count
 }
 
 func EditCate(id int, cate *Category) int {

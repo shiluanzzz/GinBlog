@@ -31,13 +31,14 @@ func CreateUser(user *User) int {
 	}
 	return errmsg.SUCCESS
 }
-func GetUsers(pageSize, pageNum int) []User {
+func GetUsers(pageSize, pageNum int) ([]User, int64) {
 	var data []User
-	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&data).Error
+	var count int64
+	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&data).Count(&count).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil
+		return nil, 0
 	}
-	return data
+	return data, count
 }
 func CheckPassword(user *User) (RoleCode, errCode int) {
 	//if CheckUserNotExist(user.Username)!=errmsg.SUCCESS{

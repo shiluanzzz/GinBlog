@@ -59,13 +59,14 @@ func GetArticleById(id int) (Article, int) {
 }
 
 // GetArticles  查询文章列表，带有分类标签
-func GetArticles(pageSize, pageNum int) ([]Article, int) {
+func GetArticles(pageSize, pageNum int) ([]Article, int, int64) {
 	var data []Article
-	err := db.Preload("Category").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&data).Error
+	var count int64
+	err := db.Preload("Category").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&data).Count(&count).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil, errmsg.ERROR
+		return nil, errmsg.ERROR, count
 	}
-	return data, errmsg.SUCCESS
+	return data, errmsg.SUCCESS, count
 }
 
 func EditArticle(id int, article *Article) int {
