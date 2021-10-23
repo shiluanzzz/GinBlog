@@ -13,6 +13,8 @@ func InitRouter() {
 	r := gin.New()
 	r.Use(middleware.Log())
 	r.Use(gin.Recovery())
+	r.Use(middleware.Cors())
+
 	PublicRouter := r.Group("api/v1")
 	{
 		//Public 分类
@@ -24,7 +26,6 @@ func InitRouter() {
 		// Login
 		PublicRouter.POST("/login", v1.Login)
 		PublicRouter.POST("/user/add", v1.AddUser)
-
 	}
 	adminRouter := r.Group("api/v1")
 	adminRouter.Use(middleware.JwtToken())

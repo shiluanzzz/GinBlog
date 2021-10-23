@@ -4,6 +4,7 @@ import (
 	"GinBlog/middleware"
 	"GinBlog/model"
 	"GinBlog/utils/errmsg"
+	"GinBlog/utils/vaildator"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -12,7 +13,17 @@ import (
 func AddUser(c *gin.Context) {
 	var data model.User
 	_ = c.ShouldBindJSON(&data)
-	var code int
+	// 数据验证V
+	errorMsg, code := vaildator.Validate(data)
+	if code != errmsg.SUCCESS {
+		c.JSON(http.StatusOK, gin.H{
+			"code": code,
+			"msg":  errorMsg,
+			"data": data,
+		})
+		return
+	}
+	// 注册
 	code = model.CheckUserNotExist(data.Username)
 	if code == errmsg.SUCCESS {
 		// 默认为普通用户 权限为2
