@@ -10,7 +10,9 @@ import "GinBlog/utils"
 
 func InitRouter() {
 	gin.SetMode(utils.AppMode)
-	r := gin.Default()
+	r := gin.New()
+	r.Use(middleware.Log())
+	r.Use(gin.Recovery())
 	PublicRouter := r.Group("api/v1")
 	{
 		//Public 分类
