@@ -39,6 +39,8 @@ func InitRouter() {
 		adminRouter.POST("/article/add", v1.AddArt)
 		adminRouter.DELETE("/article/delete/:id", v1.DeleteArt)
 		adminRouter.PUT("/article/update/:id", v1.UpdateArt)
+		// upload
+		adminRouter.POST("/upload", v1.UploadFile)
 	}
 
 	err := r.Run(utils.HttpPort)

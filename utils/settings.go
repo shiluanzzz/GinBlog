@@ -15,6 +15,12 @@ var (
 	DbPassword string
 	DbName     string
 	JwtKey     string
+
+	// OSS
+	ACCESSKEY  string
+	SK         string
+	BucketName string
+	OSSServer  string
 )
 
 func init() {
@@ -24,6 +30,8 @@ func init() {
 	}
 	LoadServer(file)
 	LoadDB(file)
+	LoadOSS(file)
+	//fmt.Println(ACCESSKEY,SK,BucketName,OSSServer)
 }
 func LoadServer(file *ini.File) {
 	AppMode = file.Section("server").Key("AppMode").MustString("debug")
@@ -37,4 +45,11 @@ func LoadDB(file *ini.File) {
 	DbUser = file.Section("database").Key("DbUser").String()
 	DbPassword = file.Section("database").Key("DbPassword").String()
 	DbName = file.Section("database").Key("DbName").String()
+}
+
+func LoadOSS(file *ini.File) {
+	ACCESSKEY = file.Section("oss").Key("AK").String()
+	SK = file.Section("oss").Key("SK").String()
+	BucketName = file.Section("oss").Key("Bucket").String()
+	OSSServer = file.Section("oss").Key("ServerAddr").String()
 }
