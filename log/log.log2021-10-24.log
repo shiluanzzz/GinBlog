@@ -1,0 +1,5 @@
+time="2021-10-24 15:17:21" level=info Cost="77 ms" HostName=shiluan-Macmini.local Status=200 UserAgent="ApiPOST Runtime +https://www.apipost.cn" dataSize=63 ip=127.0.0.1 method=POST path=/api/v1/login
+time="2021-10-24 15:20:07" level=info Cost="148 ms" HostName=shiluan-Macmini.local Status=200 UserAgent="ApiPOST Runtime +https://www.apipost.cn" dataSize=250 ip=127.0.0.1 method=POST path=/api/v1/user/add
+time="2021-10-24 15:20:25" level=info Cost="102 ms" HostName=shiluan-Macmini.local Status=200 UserAgent="ApiPOST Runtime +https://www.apipost.cn" dataSize=250 ip=127.0.0.1 method=POST path=/api/v1/user/add
+time="2021-10-24 15:20:43" level=info Cost="104 ms" HostName=shiluan-Macmini.local Status=200 UserAgent="ApiPOST Runtime +https://www.apipost.cn" dataSize=190 ip=127.0.0.1 method=POST path=/api/v1/login
+time="2021-10-24 15:20:55" level=info Cost="1 ms" HostName=shiluan-Macmini.local Status=200 UserAgent="ApiPOST Runtime +https://www.apipost.cn" dataSize=478 ip=127.0.0.1 method=GET path="/api/v1/user/list?pagesize=5&pagenum=1"

@@ -14,6 +14,8 @@ var (
 	jwtKey = []byte(utils.JwtKey)
 )
 
+// 自定义一个cliams
+
 type MyClaims struct {
 	Username string
 	jwt.StandardClaims
@@ -24,6 +26,7 @@ type MyClaims struct {
 func NewToken(Username string) (string, int) {
 	// 有效期
 	expireTime := time.Now().Add(10 * time.Hour)
+	// 声明一个Claims
 	SetClaims := MyClaims{
 		Username,
 		jwt.StandardClaims{ExpiresAt: expireTime.Unix(), Issuer: "ginblog"},
@@ -57,6 +60,7 @@ func CheckToken(token string) (*MyClaims, int) {
 
 func JwtToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// 固定写法
 		tokenHandler := c.Request.Header.Get("Authorization")
 		var code int
 		// not exist

@@ -41,9 +41,6 @@ func GetUsers(pageSize, pageNum int) ([]User, int64) {
 	return data, count
 }
 func CheckPassword(user *User) (RoleCode, errCode int) {
-	//if CheckUserNotExist(user.Username)!=errmsg.SUCCESS{
-	//	return errmsg.ERROR_USER_NOT_EXIST
-	//}
 	var selectUser User
 	err := db.Where("username=?", user.Username).First(&selectUser).Error
 	if err != nil {
